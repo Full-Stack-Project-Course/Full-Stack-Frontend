@@ -1,0 +1,18 @@
+<section *ngIf="$any(bsc.breadcrumbs$ | async) as breadcrumbs" class="py-5 mb-3" style="margin-top: 105px; background-color: #f5f5f5;">
+    <div *ngIf="breadcrumbs[breadcrumbs.length-1].label != 'Home'" class="container">
+        <div class="d-flex row align-items-center">
+            <div class="col-9 fs-1" xngBreadcrumbItem="breadcrumb">
+                {{breadcrumbs[breadcrumbs.length-1].label | titlecase}}
+            </div>
+            <div class="col-3">
+                <xng-breadcrumb>
+                    <ng-container *xngBreadcrumbItem="let crumb">
+                        {{crumb | titlecase}}
+                    </ng-container>
+                </xng-breadcrumb>
+                
+            </div>
+        </div>
+    </div>
+
+</section>

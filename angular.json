@@ -17,6 +17,9 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "@paralleldrive/cuid2"
+            ],
             "outputPath": "dist/full-project-front-end",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -30,6 +33,10 @@
               "src/assets"
             ],
             "styles": [
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
+              "node_modules/font-awesome/css/font-awesome.min.css",
+              "node_modules/ngx-spinner/animations/ball-newton-cradle.css",
               "src/styles.scss"
             ],
             "scripts": []
@@ -51,6 +58,12 @@
               "outputHashing": "all"
             },
             "development": {
+              "fileReplacements": [
+                {
+                  "replace": "./src/environments/environments.ts",
+                  "with": "./src/environments/environments.dev.ts"
+                }
+              ],
               "buildOptimizer": false,
               "optimization": false,
               "vendorChunk": true,
