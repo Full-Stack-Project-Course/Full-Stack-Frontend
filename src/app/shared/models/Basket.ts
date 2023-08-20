@@ -15,6 +15,11 @@ export interface BasketItem{
 export interface Basket{
     id:string
     items:BasketItem[]
+    deliveryMethodId?:number
+    shippingPrice:number
+    paymentIntentId?:string
+    clientSecret?:string;
+
 }
 
 export interface BasketTotal{

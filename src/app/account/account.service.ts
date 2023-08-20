@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { enviroment } from 'src/environments/environments';
-import { User } from '../shared/models/User';
+import { Address, User } from '../shared/models/User';
 import { Observable, ReplaySubject, map, of } from 'rxjs';
 
 @Injectable({
@@ -38,13 +38,21 @@ export class AccountService {
     }
     let myheaders = new HttpHeaders()
     myheaders = myheaders.set("Authorization" , `Bearer ${token}`)
-    return this.http.get<User>(this.baseURL+"getuser" , {headers:myheaders}).pipe(
+    return this.http.get<User>(this.baseURL+"getuser" ).pipe(
       map(user => {
         this.currentUserSource.next(user)
         localStorage.setItem("token" , user.token)
         return user
       })
     )
+  }
+
+  getUserAddress(){
+    return this.http.get<Address>(this.baseURL+"address")
+  }
+
+  UpdateUserAddress(address:Address){
+    return this.http.put<Address>(this.baseURL+"address" , address)
   }
 
   register(values:any){

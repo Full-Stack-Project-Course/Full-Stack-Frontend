@@ -11,6 +11,9 @@ const routes: Routes = [
   {path:"basket" , loadChildren: async () => (await import('./basket/basket.module')).BasketModule},
   {path:"checkout" , canActivate:[authGuard] , loadChildren: async () => (await import('./checkout/checkout.module')).CheckoutModule},
   {path:"account"  , loadChildren: async () => (await import('./account/account.module')).AccountModule},
+  {path:"orders"  , loadChildren: async () => (await import('./order/order.module')).OrderModule
+  
+},
 
   {path:"**" ,component:ErrorComponent}
 ];

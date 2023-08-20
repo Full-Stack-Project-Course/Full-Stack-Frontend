@@ -10,6 +10,8 @@ import { HttpClientModule  , HTTP_INTERCEPTORS} from '@angular/common/http';
 import { SharedModule } from './shared/shared.module';
 import { HomeModule } from './home/home.module';
 import { LoadingInterceptor } from './core/interceptors/loading.interceptor';
+import { JWTTokenInterceptor } from './core/interceptors/jwttoken.interceptor';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -19,6 +21,7 @@ import { LoadingInterceptor } from './core/interceptors/loading.interceptor';
     BrowserModule,
     AppRoutingModule,
     CoreModule,
+    ToastrModule.forRoot(),
     
     HttpClientModule,
     
@@ -27,6 +30,8 @@ import { LoadingInterceptor } from './core/interceptors/loading.interceptor';
   ],
   providers: [{
     provide:HTTP_INTERCEPTORS , useClass:LoadingInterceptor , multi:true
+  },{
+    provide:HTTP_INTERCEPTORS , useClass:JWTTokenInterceptor , multi:true
   }],
   bootstrap: [AppComponent]
 })

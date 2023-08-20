@@ -1,8 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Basket, BasketItem, BasketTotal } from '../shared/models/Basket';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, map } from 'rxjs';
 import { product } from '../shared/models/Product';
+import { DeliveryMethod } from '../shared/models/DeliveryMethod';
+import { enviroment } from 'src/environments/environments';
 
 @Injectable({
   providedIn: 'root'
@@ -18,8 +20,9 @@ export class BasketService {
   private BasketTotalSource$:BehaviorSubject<null | BasketTotal> = new BehaviorSubject<null | BasketTotal>(null) 
 
   BasketTotal = this.BasketTotalSource$.asObservable()
+  ShippingCost!:DeliveryMethod
 
-  baseUrl = 'http://localhost:5032/api/Basket';
+  baseUrl = enviroment.baseURL + 'Basket';
   getBasket(id:string){
     return this.http.get<Basket>(this.baseUrl + `/${id}`)
     .subscribe({
@@ -43,13 +46,37 @@ export class BasketService {
     return this.BasketSource$.value
   }
 
+  setShippingPrice(deliverymethod:DeliveryMethod){
+    let basket = this.getCurrentBasket()
+
+    if(basket){
+      basket.shippingPrice=deliverymethod.price;
+      console.log("shipping price is ",deliverymethod)
+      basket.deliveryMethodId=deliverymethod.id;
+      this.setBasket(basket);
+    }
+   
+
+  }
+
+  CreatePaymentIntent(){
+    var basket = this.getCurrentBasket()
+    if (!basket){return}
+    console.log(basket)
+    return this.http.post<Basket>(enviroment.baseURL + `payment/${basket.id}`,{} ).pipe(map(basketdto => {
+      this.BasketSource$.next(basketdto)
+
+    }))
+  }
+
   CalculateTotals(){
-    var shipping = 0
+   
     var basket = this.getCurrentBasket()
     if(!basket){return}
+    let shipping = basket.shippingPrice ?? 0
     var subtotal = basket.items.reduce((sum , item) => sum += (item.quantity * item.price) , 0 )
     this.BasketTotalSource$.next({
-      shipping , subtotal , total : subtotal+shipping
+      shipping:shipping , subtotal , total : subtotal+shipping
     })
   }
 
@@ -76,7 +103,9 @@ export class BasketService {
     return (item as product).productBrand !== undefined
   }
 
-  private deleteBasket(basket_ID:string){
+  
+
+   deleteBasket(basket_ID:string){
     return this.http.delete<Basket>(this.baseUrl+ `/${basket_ID}`).subscribe(() => {
       this.BasketSource$.next(null)
       this.BasketTotalSource$.next(null)
