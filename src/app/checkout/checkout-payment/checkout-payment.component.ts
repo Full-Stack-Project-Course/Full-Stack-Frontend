@@ -112,7 +112,7 @@ export class CheckoutPaymentComponent implements OnInit {
   }
 
   LoadStripe(){
-    loadStripe("pk_test_51NApEXF6As8Bq8LDGfeenMOfADzSVY82bNg2elTREkyhx4bsyaNYDQKrQAoWiUwIw9OCdmcBlpalUWCgNOU94JNu00zAm5zwGm")
+    loadStripe("Your Publishable Key Goes Here")
     .then(res=>{
       this.stripe = res
 
